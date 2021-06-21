@@ -1,3 +1,3 @@
-module github.com/mhemmings/revenuecat
+module github.com/nowdo-hq/revenuecat
 
 go 1.16
