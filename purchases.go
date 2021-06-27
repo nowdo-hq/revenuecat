@@ -1,5 +1,7 @@
 package revenuecat
 
+import "context"
+
 // CreatePurchaseOptions holds the optional values for creating a purchase.
 // https://docs.revenuecat.com/reference#receipts
 type CreatePurchaseOptions struct {
@@ -16,7 +18,12 @@ type CreatePurchaseOptions struct {
 
 // CreatePurchase records a purchase for a user from iOS, Android, or Stripe and will create a user if they don't already exist.
 // https://docs.revenuecat.com/reference#receipts
-func (c *Client) CreatePurchase(userID string, receipt string, opt *CreatePurchaseOptions) (Subscriber, error) {
+func (c *Client) CreatePurchase(
+	ctx context.Context,
+	userID string,
+	receipt string,
+	opt *CreatePurchaseOptions,
+) (Subscriber, error) {
 	var resp struct {
 		Subscriber Subscriber `json:"subscriber"`
 	}
@@ -36,6 +43,6 @@ func (c *Client) CreatePurchase(userID string, receipt string, opt *CreatePurcha
 		platform = opt.Platform
 	}
 
-	err := c.call("POST", "receipts", req, platform, &resp)
+	err := c.call(ctx, "POST", "receipts", req, platform, &resp)
 	return resp.Subscriber, err
 }

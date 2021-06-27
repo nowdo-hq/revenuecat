@@ -1,6 +1,7 @@
 package revenuecat
 
 import (
+	"context"
 	"testing"
 )
 
@@ -9,7 +10,7 @@ func TestCreatePurchaseWithoutOpts(t *testing.T) {
 	rc := New("apikey")
 	rc.http = cl
 
-	_, err := rc.CreatePurchase("123", "testreceipt", nil)
+	_, err := rc.CreatePurchase(context.Background(), "123", "testreceipt", nil)
 	if err != nil {
 		t.Errorf("error: %v", err)
 	}
@@ -32,7 +33,7 @@ func TestCreatePurchaseWithOpts(t *testing.T) {
 		IsRestore: true,
 	}
 
-	_, err := rc.CreatePurchase("123", "testreceipt", opt)
+	_, err := rc.CreatePurchase(context.Background(), "123", "testreceipt", opt)
 	if err != nil {
 		t.Errorf("error: %v", err)
 	}

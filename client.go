@@ -2,6 +2,7 @@ package revenuecat
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -23,17 +24,26 @@ type doer interface {
 // New returns a new *Client for the provided API key.
 // For more information on authentication, see https://docs.revenuecat.com/docs/authentication.
 func New(apiKey string) *Client {
-	return &Client{
-		apiKey: apiKey,
-		apiURL: "https://api.revenuecat.com/v1/",
-		http: &http.Client{
+	return NewWithClient(
+		apiKey,
+		&http.Client{
 			// Set a long timeout here since calls to Apple are probably invloved.
 			Timeout: 10 * time.Second,
 		},
+	)
+}
+
+// NewWithClient returns a new *Client for the provided API key and http.Client.
+// For more information on authentication, see https://docs.revenuecat.com/docs/authentication.
+func NewWithClient(apiKey string, client *http.Client) *Client {
+	return &Client{
+		apiKey: apiKey,
+		apiURL: "https://api.revenuecat.com/v1/",
+		http:   client,
 	}
 }
 
-func (c *Client) call(method, path string, reqBody interface{}, platform string, respBody interface{}) error {
+func (c *Client) call(ctx context.Context, method, path string, reqBody interface{}, platform string, respBody interface{}) error {
 	var reqBodyJSON io.Reader
 	if reqBody != nil {
 		js, err := json.Marshal(reqBody)
@@ -51,6 +61,7 @@ func (c *Client) call(method, path string, reqBody interface{}, platform string,
 	if platform != "" {
 		req.Header.Add("X-Platform", platform)
 	}
+	req = req.WithContext(ctx)
 
 	resp, err := c.http.Do(req)
 	if err != nil {
