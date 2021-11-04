@@ -1,6 +1,7 @@
 package revenuecat
 
 import (
+	"context"
 	"testing"
 )
 
@@ -9,7 +10,7 @@ func TestOverrideOffering(t *testing.T) {
 	rc := New("apikey")
 	rc.http = cl
 
-	_, err := rc.OverrideOffering("123", "testUUID")
+	_, err := rc.OverrideOffering(context.Background(), "123", "testUUID")
 	if err != nil {
 		t.Errorf("error: %v", err)
 	}
@@ -23,7 +24,7 @@ func TestDeleteOfferingOverride(t *testing.T) {
 	rc := New("apikey")
 	rc.http = cl
 
-	_, err := rc.DeleteOfferingOverride("123")
+	_, err := rc.DeleteOfferingOverride(context.Background(), "123")
 	if err != nil {
 		t.Errorf("error: %v", err)
 	}

@@ -1,6 +1,7 @@
 package revenuecat
 
 import (
+	"context"
 	"testing"
 )
 
@@ -9,7 +10,7 @@ func TestAddUserAttribution(t *testing.T) {
 	rc := New("apikey")
 	rc.http = cl
 
-	err := rc.AddUserAttribution("123", Facebook, AttributionData{IDFA: "test"})
+	err := rc.AddUserAttribution(context.Background(), "123", Facebook, AttributionData{IDFA: "test"})
 	if err != nil {
 		t.Errorf("error: %v", err)
 	}

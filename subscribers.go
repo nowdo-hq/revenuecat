@@ -1,6 +1,7 @@
 package revenuecat
 
 import (
+	"context"
 	"encoding/json"
 	"time"
 )
@@ -83,36 +84,36 @@ func (s Subscriber) IsEntitledTo(entitlement string) bool {
 
 // GetSubscriber gets the latest subscriber info or creates one if it doesn't exist.
 // https://docs.revenuecat.com/reference#subscribers
-func (c *Client) GetSubscriber(userID string) (Subscriber, error) {
-	return c.GetSubscriberWithPlatform(userID, "")
+func (c *Client) GetSubscriber(ctx context.Context, userID string) (Subscriber, error) {
+	return c.GetSubscriberWithPlatform(ctx, userID, "")
 }
 
 // GetSubscriberWithPlatform gets the latest subscriber info or creates one if it doesn't exist, updating the subscriber record's last_seen
 // value for the platform provided.
 // https://docs.revenuecat.com/reference#subscribers
-func (c *Client) GetSubscriberWithPlatform(userID string, platform string) (Subscriber, error) {
+func (c *Client) GetSubscriberWithPlatform(ctx context.Context, userID string, platform string) (Subscriber, error) {
 	var resp struct {
 		Subscriber Subscriber `json:"subscriber"`
 	}
-	err := c.call("GET", "subscribers/"+userID, nil, platform, &resp)
+	err := c.call(ctx, "GET", "subscribers/"+userID, nil, platform, &resp)
 	return resp.Subscriber, err
 }
 
 // UpdateSubscriberAttributes updates subscriber attributes for a user.
 // https://docs.revenuecat.com/reference#update-subscriber-attributes
-func (c *Client) UpdateSubscriberAttributes(userID string, attributes map[string]SubscriberAttribute) error {
+func (c *Client) UpdateSubscriberAttributes(ctx context.Context, userID string, attributes map[string]SubscriberAttribute) error {
 	req := struct {
 		Attributes map[string]SubscriberAttribute `json:"attributes"`
 	}{
 		Attributes: attributes,
 	}
-	return c.call("POST", "subscribers/"+userID+"/attributes", req, "", nil)
+	return c.call(ctx, "POST", "subscribers/"+userID+"/attributes", req, "", nil)
 }
 
 // DeleteSubscriber permanently deletes a subscriber.
 // https://docs.revenuecat.com/reference#subscribersapp_user_id
-func (c *Client) DeleteSubscriber(userID string) error {
-	return c.call("DELETE", "subscribers/"+userID, nil, "", nil)
+func (c *Client) DeleteSubscriber(ctx context.Context, userID string) error {
+	return c.call(ctx, "DELETE", "subscribers/"+userID, nil, "", nil)
 }
 
 func (attr SubscriberAttribute) MarshalJSON() ([]byte, error) {

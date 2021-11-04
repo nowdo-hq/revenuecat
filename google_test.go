@@ -1,6 +1,7 @@
 package revenuecat
 
 import (
+	"context"
 	"testing"
 )
 
@@ -9,7 +10,7 @@ func TestRefundGoogleSubscription(t *testing.T) {
 	rc := New("apikey")
 	rc.http = cl
 
-	_, err := rc.RefundGoogleSubscription("123", "sub")
+	_, err := rc.RefundGoogleSubscription(context.Background(), "123", "sub")
 	if err != nil {
 		t.Errorf("error: %v", err)
 	}
@@ -23,7 +24,7 @@ func TestDeferGoogleSubscription(t *testing.T) {
 	rc := New("apikey")
 	rc.http = cl
 
-	_, err := rc.DeferGoogleSubscription("123", "sub", staticTime(t, "2020-01-15 23:54:17"))
+	_, err := rc.DeferGoogleSubscription(context.Background(), "123", "sub", staticTime(t, "2020-01-15 23:54:17"))
 	if err != nil {
 		t.Errorf("error: %v", err)
 	}

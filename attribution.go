@@ -1,5 +1,7 @@
 package revenuecat
 
+import "context"
+
 // Network represents a predefined attribution channel.
 type Network int
 
@@ -21,7 +23,7 @@ type AttributionData struct {
 
 // AddUserAttribution attaches attribution data to a subscriber from specific supported networks.
 // https://docs.revenuecat.com/reference#subscribersattribution
-func (c *Client) AddUserAttribution(userID string, network Network, data AttributionData) error {
+func (c *Client) AddUserAttribution(ctx context.Context, userID string, network Network, data AttributionData) error {
 	var resp struct {
 		Subscriber Subscriber `json:"subscriber"`
 	}
@@ -34,5 +36,5 @@ func (c *Client) AddUserAttribution(userID string, network Network, data Attribu
 		Network: network,
 	}
 
-	return c.call("POST", "subscribers/"+userID+"/attribution", req, "", &resp)
+	return c.call(ctx, "POST", "subscribers/"+userID+"/attribution", req, "", &resp)
 }
