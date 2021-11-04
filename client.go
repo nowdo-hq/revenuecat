@@ -2,6 +2,7 @@ package revenuecat
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -33,7 +34,15 @@ func New(apiKey string) *Client {
 	}
 }
 
-func (c *Client) call(method, path string, reqBody interface{}, platform string, respBody interface{}) error {
+func NewWithClient(apiKey string, client *http.Client) *Client {
+	return &Client{
+		apiKey: apiKey,
+		apiURL: "https://api.revenuecat.com/v1/",
+		http:   client,
+	}
+}
+
+func (c *Client) call(ctx context.Context, method, path string, reqBody interface{}, platform string, respBody interface{}) error {
 	var reqBodyJSON io.Reader
 	if reqBody != nil {
 		js, err := json.Marshal(reqBody)
@@ -42,7 +51,7 @@ func (c *Client) call(method, path string, reqBody interface{}, platform string,
 		}
 		reqBodyJSON = bytes.NewBuffer(js)
 	}
-	req, err := http.NewRequest(method, c.apiURL+path, reqBodyJSON)
+	req, err := http.NewRequestWithContext(ctx, method, c.apiURL+path, reqBodyJSON)
 	if err != nil {
 		return fmt.Errorf("error creating request: %v", err)
 	}

@@ -1,6 +1,7 @@
 package revenuecat
 
 import (
+	"context"
 	"encoding/json"
 	"testing"
 	"time"
@@ -11,7 +12,7 @@ func TestGetSubscriber(t *testing.T) {
 	rc := New("apikey")
 	rc.http = cl
 
-	_, err := rc.GetSubscriber("123")
+	_, err := rc.GetSubscriber(context.Background(), "123")
 	if err != nil {
 		t.Errorf("error: %v", err)
 	}
@@ -25,7 +26,7 @@ func TestGetSubscriberWithPlatform(t *testing.T) {
 	rc := New("apikey")
 	rc.http = cl
 
-	_, err := rc.GetSubscriberWithPlatform("123", "ios")
+	_, err := rc.GetSubscriberWithPlatform(context.Background(), "123", "ios")
 	if err != nil {
 		t.Errorf("error: %v", err)
 	}
@@ -47,7 +48,7 @@ func TestUpdateSubscriberAttributes(t *testing.T) {
 			UpdatedAt: staticTime(t, "2020-01-15 23:54:17"),
 		},
 	}
-	err := rc.UpdateSubscriberAttributes("123", attrs)
+	err := rc.UpdateSubscriberAttributes(context.Background(), "123", attrs)
 	if err != nil {
 		t.Errorf("error: %v", err)
 	}
@@ -62,7 +63,7 @@ func TestDeleteSubscriber(t *testing.T) {
 	rc := New("apikey")
 	rc.http = cl
 
-	err := rc.DeleteSubscriber("123")
+	err := rc.DeleteSubscriber(context.Background(), "123")
 	if err != nil {
 		t.Errorf("error: %v", err)
 	}

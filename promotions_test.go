@@ -1,6 +1,7 @@
 package revenuecat
 
 import (
+	"context"
 	"testing"
 )
 
@@ -9,7 +10,7 @@ func TestGrantEntitlement(t *testing.T) {
 	rc := New("apikey")
 	rc.http = cl
 
-	_, err := rc.GrantEntitlement("123", "all", ThreeMonth, staticTime(t, "2020-01-15 23:54:17"))
+	_, err := rc.GrantEntitlement(context.Background(), "123", "all", ThreeMonth, staticTime(t, "2020-01-15 23:54:17"))
 	if err != nil {
 		t.Errorf("error: %v", err)
 	}
@@ -24,7 +25,7 @@ func TestRevokeEntitlement(t *testing.T) {
 	rc := New("apikey")
 	rc.http = cl
 
-	_, err := rc.RevokeEntitlement("123", "all")
+	_, err := rc.RevokeEntitlement(context.Background(), "123", "all")
 	if err != nil {
 		t.Errorf("error: %v", err)
 	}
